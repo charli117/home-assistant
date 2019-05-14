@@ -6,10 +6,7 @@ import json
 import logging
 import random
 import time
-import requests
 import voluptuous as vol
-from datetime import timedelta
-
 from datetime import timedelta
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.const import TEMP_CELSIUS
@@ -29,13 +26,13 @@ USER_AGENT = 'ColorfulCloudsPro/3.2.2 (iPhone; iOS 11.3; Scale/3.00)'
 
 #定义传感器参数属性
 SENSOR_TYPES = {
-    'tvoc': ('tvoc', None, 'blur-linear'),                 #有机污染物
-    'temp': ('temp', '°C', 'thermometer-lines'),    #温度
-    'hcho': ('hcho', 'mg/m3', 'blur-radial'),              #甲醛
-    'pm25': ('pm25', 'μg/m³', 'blur'),                     #PM2.5
+    'tvoc': ('tvoc', None, 'blur-linear'),                  #有机污染物
+    'temp': ('temp', '°C', 'thermometer-lines'),            #温度
+    'hcho': ('hcho', 'mg/m3', 'blur-radial'),               #甲醛
+    'pm25': ('pm25', 'μg/m³', 'blur'),                      #PM2.5
     'co2': ('co2', 'ppm', 'blur-radial'),                   #二氧化碳浓度
-    'humi': ('humi', '%', 'water-percent'),            #湿度
-    'lux': ('lux', 'lm', 'white-balance-sunny')            #光照强度
+    'humi': ('humi', '%', 'water-percent'),                 #湿度
+    'lux': ('lux', 'lm', 'white-balance-sunny')             #光照强度
 }
 
 #初始化输入参数
@@ -89,7 +86,7 @@ class AirQualitySensor(Entity):
     def __init__(self, name, type, fengwen):
         """Initialize the sensor."""
         tname, unit, icon = SENSOR_TYPES[type]
-        #self._state = None
+        self._state = None
         self._name = name + '_' + tname
         self._type = type
         self._unit = unit
@@ -202,7 +199,7 @@ class FengWenData:
             else:
                 data['co2'] = 0
             data['humi'] = int(result['humi'])
-            data['lux'] = int(result['lux'])
+            data['lux'] = int(result['lux']) * 100
         except:
             import traceback
             _LOGGER.error('exception: %s', traceback.format_exc())
